@@ -1,6 +1,8 @@
 
 # 环境版本
 FROM 1and1internet/ubuntu-16-nginx
+# 维护者
+LABEL maintainer="wengAlan"
 # 直接默认非交互
 ARG DEBIAN_FRONTEND=noninteractive
 # php 环境的版本
@@ -57,12 +59,12 @@ RUN  mkdir /tmp/composer/ && \
     rm -rf /tmp/composer
 
 
-# 安装kafka
-RUN git clone https://github.com/edenhill/librdkafka.git \
-    && cd librdkafka \
-    && ./configure \
-    && make \
-    && make install
+# # 安装kafka
+# RUN git clone https://github.com/edenhill/librdkafka.git \
+#     && cd librdkafka \
+#     && ./configure \
+#     && make \
+#     && make install
 
 # 安装驱动
 RUN pecl install http://pecl.php.net/get/mongodb-1.4.4.tgz \
@@ -73,14 +75,14 @@ RUN pecl install http://pecl.php.net/get/mongodb-1.4.4.tgz \
     && echo "extension=grpc.so" >> /etc/php/${PHP_VERSION}/fpm/conf.d/20-grpc.ini \
     && pecl install http://pecl.php.net/get/protobuf-3.5.1.1.tgz \
     && echo "extension=protobuf.so" >> /etc/php/${PHP_VERSION}/fpm/conf.d/20-protobuf.ini \
-    && pecl install http://pecl.php.net/get/rdkafka-3.0.5.tgz \
-    && echo "extension=rdkafka.so" >> /etc/php/${PHP_VERSION}/fpm/conf.d/20-rdkafka.ini \
+    # && pecl install http://pecl.php.net/get/rdkafka-3.0.5.tgz \
+    # && echo "extension=rdkafka.so" >> /etc/php/${PHP_VERSION}/fpm/conf.d/20-rdkafka.ini \
     && pecl install http://pecl.php.net/get/redis-5.3.4.tgz \
     && echo "extension=redis.so" >> /etc/php/${PHP_VERSION}/fpm/conf.d/20-redis.ini \
     && pecl install http://pecl.php.net/get/swoole-4.6.5.tgz \
     && echo "extension=swoole.so" >> /etc/php/${PHP_VERSION}/fpm/conf.d/20-swoole.ini
 
-# 执行移除等操作
+# 执行移除和修改等操作
 RUN  apt-get autoremove -y && \
     rm -rf /var/lib/apt/lists/* && \
     rm -rf /etc/nginx/sites-enabled/default /etc/nginx/sites-available/* && \
